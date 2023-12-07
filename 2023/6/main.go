@@ -36,7 +36,7 @@ func Part2() {
 	winningCount := CalcNumberOfRoutes(t, d)
 
 	fmt.Println("Part 2: ", winningCount)
-	fmt.Println("took: ", time.Now().Sub(start))
+	fmt.Println("took: ", time.Since(start))
 }
 
 func runRace(waitTime, totalTime int) int {
@@ -45,7 +45,7 @@ func runRace(waitTime, totalTime int) int {
 
 func CalcNumberOfRoutes(maxTime, winningDistance int) int {
 	wins := 0
-	for waitTime := 0; waitTime <= winningDistance; waitTime++ {
+	for waitTime := 0; waitTime <= maxTime; waitTime++ {
 		distance := runRace(waitTime, maxTime)
 		if distance > winningDistance {
 			wins++
