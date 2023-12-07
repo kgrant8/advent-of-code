@@ -88,11 +88,8 @@ func main() {
 				}
 
 				destination = FindDestination(destination, almanac.Maps[key])
-				// fmt.Print(destination, " -> ")
 
 			}
-
-			// fmt.Println("L: ", destination, location)
 
 			if destination < location || location == 0 {
 				location = destination
