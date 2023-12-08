@@ -5,16 +5,17 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var HandRanks = map[string]int{
-	"5":    7,
-	"4":    6,
-	"full": 5,
-	"3":    4,
-	"2":    3,
-	"1":    2,
-	"high": 1,
+	"5ofaKind":  7,
+	"4ofaKind":  6,
+	"fullHouse": 5,
+	"3ofaKind":  4,
+	"2pairs":    3,
+	"1pair":     2,
+	"highCard":  1,
 }
 
 var CardRank = map[string]int{
@@ -71,9 +72,9 @@ func GetHandPower(cards string) int {
 	for _, count := range handMap {
 		switch count {
 		case 5:
-			return HandRanks["5"]
+			return HandRanks["5ofaKind"]
 		case 4:
-			return HandRanks["4"]
+			return HandRanks["4ofaKind"]
 		case 3:
 			hasThreeOfaKind = true
 		case 2:
@@ -82,22 +83,22 @@ func GetHandPower(cards string) int {
 	}
 
 	if hasThreeOfaKind && hasPair == 1 {
-		return HandRanks["full"]
+		return HandRanks["fullHouse"]
 	}
 
 	if hasThreeOfaKind && hasPair == 0 {
-		return HandRanks["3"]
+		return HandRanks["3ofaKind"]
 	}
 
 	if hasPair == 2 {
-		return HandRanks["2"]
+		return HandRanks["2pairs"]
 	}
 
 	if hasPair == 1 {
-		return HandRanks["1"]
+		return HandRanks["1pair"]
 	}
 
-	return HandRanks["high"]
+	return HandRanks["highCard"]
 }
 
 func GetHandPowerJokersWild(cards string) int {
@@ -108,47 +109,45 @@ func GetHandPowerJokersWild(cards string) int {
 	}
 
 	switch handPower {
-	case 7:
+	case HandRanks["5ofaKind"]:
 		return handPower
 	//4 of a kind
-	case 6:
+	case HandRanks["4ofaKind"]:
 		if numberOfJokers == 1 || numberOfJokers == 4 {
-			return HandRanks["5"]
+			return HandRanks["5ofaKind"]
 		}
 
 		return handPower
 	// full house
-	case 5:
+	case HandRanks["fullHouse"]:
 		if numberOfJokers == 2 || numberOfJokers == 3 {
-			return HandRanks["5"]
+			return HandRanks["5ofaKind"]
 		}
 
 		return handPower
 	// 3 of a kind
-	case 4:
+	case HandRanks["3ofaKind"]:
 		switch numberOfJokers {
 		case 1, 3:
-			return HandRanks["4"]
+			return HandRanks["4ofaKind"]
 		}
 
 		return handPower
 	// 2 pairs
-	case 3:
+	case HandRanks["2pairs"]:
 		switch numberOfJokers {
 		case 2:
-			return HandRanks["4"]
+			return HandRanks["4ofaKind"]
 		case 1:
-			return HandRanks["full"]
+			return HandRanks["fullHouse"]
 		}
 
 		return handPower
 	// pair
-	case 2:
+	case HandRanks["1pair"]:
 		switch numberOfJokers {
-		case 2:
-			return HandRanks["3"]
-		case 1:
-			return HandRanks["full"]
+		case 1, 2:
+			return HandRanks["3ofaKind"]
 		}
 
 		return handPower
@@ -156,23 +155,27 @@ func GetHandPowerJokersWild(cards string) int {
 	case 1:
 		switch numberOfJokers {
 		case 1:
-			return HandRanks["2"]
+			return HandRanks["1pair"]
 		}
 
 		return handPower
 
 	}
 
-	return HandRanks["high"]
+	return HandRanks["highCard"]
 
 }
 
 func main() {
 
 	// normal
+	startP1 := time.Now()
 	Play(false)
+	fmt.Println("P1 time:", time.Since(startP1))
 	// jokers wild
+	startP2 := time.Now()
 	Play(true)
+	fmt.Println("P2 time:", time.Since(startP2))
 
 }
 
